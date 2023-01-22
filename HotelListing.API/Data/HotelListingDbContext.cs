@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HotelListing.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.API.Data
 {
