@@ -21,7 +21,8 @@ builder.Services.AddDbContext<HotelListingDbContext>(options =>
 //Add Identity User
 builder.Services.AddIdentityCore<ApiUser>()
 	.AddRoles<IdentityRole>()
-	.AddEntityFrameworkStores<HotelListingDbContext>();
+	.AddTokenProvider<DataProtectorTokenProvider<ApiUser>>("HotelApiProviding")
+	.AddEntityFrameworkStores<HotelListingDbContext>().AddDefaultTokenProviders();
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -81,6 +82,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 //CROS config
 app.UseCors("AllowAll");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

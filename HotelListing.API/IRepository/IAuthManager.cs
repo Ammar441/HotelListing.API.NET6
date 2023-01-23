@@ -7,5 +7,7 @@ namespace HotelListing.API.IRepository
 	{
 		Task<IEnumerable<IdentityError>> Register(ApiUserDto apiUserDto);
 		Task<AuthResponseDto> Login(LoginDto loginDto);
+		Task<AuthResponseDto> VerifyRefreshToken(AuthResponseDto request);
+		Task<string> CreateRefreshToken();
 	}
 }
