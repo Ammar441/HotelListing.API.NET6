@@ -3,9 +3,12 @@ using HotelListing.API.Data;
 using HotelListing.API.IRepository;
 using HotelListing.API.Models;
 using HotelListing.API.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +16,12 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("HotelListingDbConnection");
 builder.Services.AddDbContext<HotelListingDbContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+	options.UseSqlServer(connectionString);
 });
 //Add Identity User
 builder.Services.AddIdentityCore<ApiUser>()
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<HotelListingDbContext>();
+	.AddRoles<IdentityRole>()
+	.AddEntityFrameworkStores<HotelListingDbContext>();
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,10 +31,10 @@ builder.Services.AddSwaggerGen();
 //cros config
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        b => b.AllowAnyHeader()
-        .AllowAnyOrigin()
-        .AllowAnyMethod());
+	options.AddPolicy("AllowAll",
+		b => b.AllowAnyHeader()
+		.AllowAnyOrigin()
+		.AllowAnyMethod());
 });
 
 //serilog config
@@ -45,13 +48,34 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
+
+//Jwt configrations and authentication
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuerSigningKey = true,
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ClockSkew = TimeSpan.Zero,
+		ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+		ValidAudience = builder.Configuration["JwtSettings:Audience"],
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+	};
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
