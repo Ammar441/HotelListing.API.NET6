@@ -22,5 +22,7 @@ namespace HotelListing.API.Data
 			modelBuilder.ApplyConfiguration(new CountryConfigrationData());
 			modelBuilder.ApplyConfiguration(new HotelConfigrationData());
 		}
+
+
 	}
 }
