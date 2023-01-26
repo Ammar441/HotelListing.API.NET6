@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using HotelListing.API.Dtos.Country;
-using HotelListing.API.Exceptions;
-using HotelListing.API.IRepository;
-using HotelListing.API.Models;
+using HotelListing.API.Core.Dtos.Country;
+using HotelListing.API.Core.Exceptions;
+using HotelListing.API.Core.IRepository;
+using HotelListing.API.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

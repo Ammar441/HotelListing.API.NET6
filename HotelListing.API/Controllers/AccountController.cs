@@ -1,5 +1,5 @@
-﻿using HotelListing.API.Dtos.Users;
-using HotelListing.API.IRepository;
+﻿using HotelListing.API.Core.Dtos.Users;
+using HotelListing.API.Core.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListing.API.Controllers
